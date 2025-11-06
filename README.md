@@ -29,30 +29,7 @@ It connects to a MongoDB database and provides APIs for pet listings, user manag
 
 ---
 
-## 📁 Project Structure
 
-Pet-Finder/
-│
-├── petmanagement_backend_rajalakshmi/
-│ ├── petmanagement_backend_rajalakshmi/
-│ │ ├── server.js
-│ │ ├── package.json
-│ │ ├── routes/
-│ │ ├── models/
-│ │ └── controllers/
-│ │
-│ ├── Dockerfile
-│ ├── docker-compose.yml
-│ └── .github/
-│ └── workflows/
-│ └── backend-ci.yml
-│
-└── README.md
-
-yaml
-Copy code
-
----
 
 ## ⚙️ Setup Instructions
 
