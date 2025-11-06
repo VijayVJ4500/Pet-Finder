@@ -123,9 +123,8 @@ Logs alerts in /var/log/petfinder_alerts.log
 
 Run it with:
 
-bash
-Copy code
-nohup ./error_watch.sh &
+##Run it in the background
+nohup ./monitor_petfinder.sh &
 
 
 🧠 Assumptions
