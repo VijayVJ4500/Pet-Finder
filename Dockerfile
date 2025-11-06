@@ -2,6 +2,9 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Add build dependencies (for node-gyp/native modules)
+RUN apk add --no-cache python3 make g++
+
 # Copy only dependency files first (for caching)
 COPY package*.json ./
 
