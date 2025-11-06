@@ -3,7 +3,7 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy only dependency files first (for caching)
-COPY package*.json ./
+COPY  petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi/package*.json ./
 
 # Install production dependencies
 RUN npm install --omit=dev
