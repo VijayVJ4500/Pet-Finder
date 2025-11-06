@@ -57,5 +57,5 @@ jobs:
            context: ./petmanagement_backend_rajalakshmi
            push: true
            file: Dockerfile
-           tags: vijay1710/registry/petfinder-backend:latest
+           tags: vijay1710/registry:latest
 
