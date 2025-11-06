@@ -54,6 +54,7 @@ jobs:
       - name: Build and push backend image
         uses: docker/build-push-action@v6
         with:
-          context: ./petmanagement_backend_rajalakshmi
-          push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/petfinder-backend:latest
+           context: ./petmanagement_backend_rajalakshmi
+           push: true
+           tags: vijayvj4500/petfinder-backend:latest
+
