@@ -1,34 +1,35 @@
-# -------- Stage 1: Build Stage --------
-FROM node:20-alpine AS build
+# -------- Stage 1: Builder --------
+FROM node:20-alpine AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy package.json and package-lock.json first
+# Copy only dependency files first
 COPY package*.json ./
 
-# Install required system packages (for native dependencies)
+# Install required system packages for native modules
 RUN apk add --no-cache python3 make g++
 
-# Install production dependencies cleanly
+# Install dependencies cleanly (production only)
 RUN npm ci --omit=dev --legacy-peer-deps
 
-# Copy remaining source code
+# Copy all source files
 COPY . .
 
-# (Optional) If building a frontend or transpiling TypeScript
+# (Optional) Build step, if you have a build script (for TypeScript etc.)
 # RUN npm run build
 
-# -------- Stage 2: Production Stage --------
+# -------- Stage 2: Production --------
 FROM node:20-alpine AS production
 
+# Set working directory
 WORKDIR /app
 
-# Copy only the necessary files from build stage
-COPY --from=build /app ./
+# Copy only necessary files from builder
+COPY --from=builder /app ./
 
-# Expose app port
+# Expose the port your backend runs on
 EXPOSE 3000
 
-# Start the application
+# Command to start your server
 CMD ["npm", "start"]
