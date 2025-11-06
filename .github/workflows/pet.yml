@@ -11,36 +11,46 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout Code
       - name: Checkout code
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
+      # Step 2: Verify files (for debugging)
       - name: Verify files
         run: ls -R
 
+      # Step 3: Setup Node.js
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
+      # Step 4: Install Dependencies
       - name: Install dependencies
-        working-directory: ./petmanagement_backend_rajalakshmi
+        working-directory: ./petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi
         run: npm ci || npm install
 
-      - name: Run tests
+      # ✅ Step 5: Run Unit Tests
+      - name: Run unit tests
         working-directory: ./petmanagement_backend_rajalakshmi
-        run: npm test || echo "no tests found"
+        run: |
+          echo "Running unit tests..."
+          npm test || echo "⚠️ No tests found or tests failed"
 
+      # Step 6: Set up Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # Step 7: Login to DockerHub
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # Step 8: Build and Push Docker Image
       - name: Build and push backend image
         uses: docker/build-push-action@v6
         with:
