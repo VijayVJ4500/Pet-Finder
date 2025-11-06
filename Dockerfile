@@ -1,35 +1,34 @@
-# ---- Base builder ----
-FROM node:20-alpine AS builder
+# -------- Stage 1: Build Stage --------
+FROM node:20-alpine AS build
+
+# Set working directory
 WORKDIR /app
 
-# Add build dependencies (for node-gyp/native modules)
-RUN apk add --no-cache python3 make g++
-
-# Copy only dependency files first (for caching)
+# Copy package.json and package-lock.json first
 COPY package*.json ./
 
-# Install production dependencies
-RUN npm install --omit=dev
+# Install required system packages (for native dependencies)
+RUN apk add --no-cache python3 make g++
 
-# Copy the rest of the source code
+# Install production dependencies cleanly
+RUN npm ci --omit=dev --legacy-peer-deps
+
+# Copy remaining source code
 COPY . .
 
-# ---- Runtime image ----
-FROM node:20-alpine AS runtime
+# (Optional) If building a frontend or transpiling TypeScript
+# RUN npm run build
+
+# -------- Stage 2: Production Stage --------
+FROM node:20-alpine AS production
+
 WORKDIR /app
 
-ENV NODE_ENV=production \
-    PORT=5000
+# Copy only the necessary files from build stage
+COPY --from=build /app ./
 
-USER node
+# Expose app port
+EXPOSE 3000
 
-# Copy production dependencies and app source
-COPY --from=builder /app/node_modules ./node_modules
-COPY --from=builder /app ./
-
-EXPOSE 5000
-
-HEALTHCHECK --interval=30s --timeout=3s --retries=3 \
-  CMD node -e "require('http').get('http://127.0.0.1:'+(process.env.PORT||5000)+'/',res=>{if(res.statusCode!==200)process.exit(1)}).on('error',()=>process.exit(1))"
-
-CMD ["node", "server.js"]
+# Start the application
+CMD ["npm", "start"]
