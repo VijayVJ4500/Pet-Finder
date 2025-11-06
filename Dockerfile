@@ -3,10 +3,13 @@ FROM node:20-alpine AS builder
 WORKDIR /app
 
 # Copy only dependency files first (for caching)
-COPY petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi/package*.json ./
+COPY package*.json ./
 
 # Install production dependencies
 RUN npm install --omit=dev
+
+# Copy the rest of the source code
+COPY . .
 
 # ---- Runtime image ----
 FROM node:20-alpine AS runtime
@@ -20,7 +23,7 @@ USER node
 
 # Copy production dependencies and source
 COPY --from=builder /app/node_modules ./node_modules
-COPY petmanagement_backend_rajalakshmi/petmanagement_backend_rajalakshmi ./
+COPY --from=builder /app ./
 
 EXPOSE 5000
 
