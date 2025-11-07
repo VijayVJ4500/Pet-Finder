@@ -18,6 +18,8 @@ services:
       - mongo
     ports:
       - "5000:5000"
+    volumes:
+      - backend_logs:/app/logs
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://localhost:5000/"]
       interval: 30s
@@ -26,3 +28,4 @@ services:
 
 volumes:
   mongo_data:
+  backend_logs:
